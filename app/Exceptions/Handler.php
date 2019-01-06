@@ -3,7 +3,10 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Illuminate\Http\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +49,24 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($request->wantsJson() && !($exception instanceof \Illuminate\Validation\ValidationException) ) {
+            $code = empty($exception->getCode()) ? Response::HTTP_BAD_REQUEST : $exception->getCode();
+            $message = $exception->getMessage();
+            if ($exception instanceof ModelNotFoundException || $exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+                $code = Response::HTTP_NOT_FOUND;
+                $message = 'Resource not found';
+            }
+            if ($exception instanceof MethodNotAllowedHttpException) {
+                $code = Response::HTTP_METHOD_NOT_ALLOWED;
+                $message = 'Method not allowed';
+            }
+            return response()->json([
+                'error' => [
+                    'message' => $message,
+                ]
+            ], $code);
+        }
+
         return parent::render($request, $exception);
     }
 }
