@@ -55,7 +55,7 @@ class NoteService implements NoteRepository
     public function createNote(array $inputs, int $userId): Note
     {
         $inputs['user_id'] = $userId;
-        return  $this->note->create($inputs);
+        return  $this->note->create($inputs)->load('user');
     }
 
     /**
@@ -68,9 +68,12 @@ class NoteService implements NoteRepository
      */
     public function updateNote(int $id, int $userId, array $inputs): Note
     {
+        if(empty($inputs['note']))
+            $inputs['note'] = null;
+
         $note = $this->note->owner($userId)->findOrFail($id);
         $note->update($inputs);
-        return $note;
+        return $note->load('user');
     }
 
     /**
