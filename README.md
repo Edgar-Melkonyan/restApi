@@ -76,3 +76,7 @@ please find how to launch the application and the structure of the API bellow .
 
 1)Scope (See Note Model)
 2)RepositoryServiceProvider (See App\Providers\)
+
+The last 1-2 hour i spent on trying to write feature tests for all api endpoints which required logging in with Oauth in order to write tests
+
+If  i had more time i would do that 
