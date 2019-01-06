@@ -12,5 +12,6 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind("App\Repositories\User\UserRepository", "App\Repositories\User\UserService");
+        $this->app->bind("App\Repositories\Note\NoteRepository", "App\Repositories\Note\NoteService");
     }
 }

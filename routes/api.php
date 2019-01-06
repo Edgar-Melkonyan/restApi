@@ -12,11 +12,10 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-
 Route::post('login', 'Api\UserController@login');
 
 Route::group(['middleware' => 'auth:api'], function() {
+    Route::resource('notes', 'Api\NoteController')->except('edit');
     Route::post('logout', 'Api\UserController@logout');
 });
 
